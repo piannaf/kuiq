@@ -1,0 +1,42 @@
+<ul>
+  <li>
+    <h3>Info</h3>
+    <div class="vid_holder">
+        <% if @user.login != ytg_get_kuiq_user_id(@vidvatar) %>
+          <h5>This Vidvatar is property of <%= link_to @vidvatar.author.name, @vidvatar.author.uri %></h5>
+        <% end %>
+        <%= @vidvatar.embed_html(212,186) %>
+
+    </div>
+    <div id="clear_both"></div>
+    <div class="advert" id="adsense728x15">
+      <a href="https://www.google.com/adsense/static/en_US/linkunit.html"><img  height=15 alt="728x15"  src="https://www.google.com/adsense/static/en_US/images/728x15_4.gif" width=728 border=0 /></a>
+    </div>
+  </li>
+  
+  <li>
+    <% if @number_of_pages > 1%>
+      <h3 id="my_videos">My Videos <span class='kuiq' id='total'>(~<%= @total %>)</span></h3>
+      <%= render :partial => "modular_partials/thumbnail_pagination" %>
+    <% else %>
+      <h3 id="my_videos" style="border-bottom: 2px solid #000; ">My Videos <span class='kuiq' id='total'>(~<%= @total %>)</span></h3>
+    <% end %>
+    
+    <% if !@ytg_videos.blank? then %>
+  	  <% for video in @ytg_videos %>
+        <%= render :partial => "thumbnail", :locals => {:video => video} %>
+  	  <% end %>
+		<% else %>
+  		<h4>
+  		  <% if @user == current_user then %>
+  		    You have not uploaded any videos with <span class='kuiq'>kuiq</span>. <%= link_to("Upload new video", youtube_auth_url(new_video_url)) %>
+  	    <% else %>
+  	      <%= @user.login %> has not uploaded any videos with <span class='kuiq'>kuiq</span>.
+  	    <% end %>
+	    </h4>
+	  <% end %>
+  	<div class="advert" id="adsense728x15">
+      <a href="https://www.google.com/adsense/static/en_US/linkunit.html"><img  height=15 alt="728x15"  src="https://www.google.com/adsense/static/en_US/images/728x15_4.gif" width=728 border=0 /></a>
+    </div>
+  </li>
+</ul>

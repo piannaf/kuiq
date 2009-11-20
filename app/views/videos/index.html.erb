@@ -1,0 +1,25 @@
+<% if @number_of_pages > 1%>
+  <h2 id="page_title">All <span class='kuiq'>kuiq</span> Videos <span class='kuiq' id='total'>(~<%= @total %>)</span></h2>
+  <%= render :partial => "modular_partials/video_pagination" %>
+<% else %>
+  <h2>All <span class='kuiq'>kuiq</span> Videos <span class='kuiq' id='total'>(~<%= @total %>)</span></h2>
+<% end %>
+
+<ul class="video_entry">
+  <% for ytg_video in @ytg_videos %>  
+    <% if ytg_video.duration < 31 then%>
+      <li>
+        <h3><%= link_to ytg_video.title, video_path(ytg_video.unique_id) %></h3>
+        <h4>
+          by <%= link_to ytg_get_kuiq_user_id(ytg_video), user_profile_path(ytg_get_kuiq_user_id(ytg_video)) %> | 
+          category: <%= ytg_video.categories.first.label.downcase %>
+        </h4>
+        <%= link_to image_tag(ytg_video.thumbnails.first.url, :alt => ytg_video.title), video_path(ytg_video.unique_id) %>
+  		  <p>
+  	    	Description: <%= ytg_video.html_content %><br /><br /><%= ytg_video.duration %> seconds
+  	    </p>
+    		<div id="clear_both"></div>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

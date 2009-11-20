@@ -1,0 +1,13 @@
+kuiq -- The micro-vlogging application
+
+By leveraging the Youtube API, kuiq delivers a web application inspired by
+Twitter, the worlds most successful micro-blogging platform, to introduce the
+world to micro-vlogging.
+
+All videos displayed publicly on kuiq are 30seconds or less and descriptions are
+limited to 140 characters.
+
+kuiq is written with Ruby On Rails and is FOSS. Anyone may copy, modify, port
+to other languages, and distribute kuiq code as long as attribution is given
+to the original author: Justin Mancinelli.
+

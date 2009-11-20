@@ -1,0 +1,58 @@
+class ProfilesController < ApplicationController
+  rescue_from NoMethodError, :with => :show_error
+  rescue_from ActiveResource::BadRequest, :with => :go_to_first_page
+  
+  def go_to_first_page
+    
+    redirect_to user_profile_url(params[:user_id], :page => 1)
+    
+    true  # so we can do "show_error and return"
+  end
+  
+  def show_error
+    respond_to do |type| 
+      type.html { render :template => "errors/profile_no_method", :layout => 'application', :status => 404 } 
+      type.all  { render :nothing => true, :status => 404 } 
+    end
+    
+    true  # so we can do "show_error and return"
+  end
+  
+  def show
+    @user = User.find_by_login(params[:user_id])
+    
+    #get thumnails
+    @max_results = 10
+    @user_vids = Video.uploaded_to_kuiq_by(params[:user_id], :max_results => @max_results, :start_index => @max_results*( params[:page].to_i - 1) + 1 )
+        
+    #initialize useful variables
+    @start = @user_vids['startIndex']
+    @finish = [@user_vids['startIndex'].to_i + @user_vids['itemsPerPage'].to_i - 1, @user_vids['totalResults'].to_i].min
+    @total = @user_vids['totalResults'].to_i
+     
+    @number_of_pages = (@total.to_f / @max_results.to_f).ceil
+    @current_page = params[:page].to_i
+    
+    #get vidvatar
+    @vidvatar = Video.find_by_id(@user.profile.vidvatar)
+    @vidvatar_owner = get_kuiq_user_id(@vidvatar)
+    
+    flash[:warning] = "Videos must be indexed by Google before appearing in your profile." if request.referer =~ /videos\/new\/upload$/
+    
+  end
+  
+  def edit
+    @profile = current_user.profile if logged_in?
+  end
+  
+  def update
+    @profile = current_user.profile
+    if @profile.update_attributes(params[:profile])
+        flash[:notice] = "Profile was successfully updated."
+        redirect_to(user_profile_url(current_user))
+    else
+        render :action => 'edit'
+    end
+  end
+      
+end

@@ -1,0 +1,19 @@
+<% if @total_users > @max_results %>
+	<h2 id="page_title">All <span class='kuiq'>kuiq</span> Users <span class='kuiq' id='total'>(<%= @total_users %>)</span></h2>
+  <h4 id="pagination"><%= will_paginate @users, :inner_window => 2, :outer_window => 0, :renderer => KuiqStylePagination, :id => 'pagination' %></h4>
+<% else %>
+	<h2>All <span class='kuiq'>kuiq</span> Users <span class='kuiq' id='total'>(<%= @total_users %>)</span></h2>
+<% end %>
+<ul id="user_list">
+  <% for user in @users %>
+    <li>
+      <h3 class="user_name"><%= link_to user.login, user_profile_path(user, :page => 1) %></h3>
+      <% if video_exists?(user.profile.vidvatar) then %>
+        <%= link_to image_tag(ytg_get_vidvatar_by_id(user.profile.vidvatar).thumbnails.first.url), user_profile_path(user, :page => 1) %>
+      <% else %> 
+        <%= link_to image_tag(ytg_get_vidvatar_by_id("T6LxtUgzVjk").thumbnails.first.url), user_profile_path(user, :page => 1) %>
+      <% end %>
+      <div id="clear_both"></div>
+    </li>
+  <% end %>
+</ul>

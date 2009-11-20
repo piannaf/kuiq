@@ -1,0 +1,23 @@
+<h2>
+  <% if @user != current_user then %>
+    <%= @user.login %>'s Profile
+  <% else %>
+    My Profile
+  <% end %>
+</h2>
+
+<% if @user == current_user then %>
+  <h4><%= link_to 'edit', edit_user_profile_path(@user) %></h4>
+  
+  <h4><span class='error_message'><%= flash[:warning] %></span></h4>
+  
+  <% if params[:error] == "FILE_MISSING" then %>
+    <h4><span class="error_message">Your upload failed because the file was missing.</span></h4>
+  <% end %>
+  
+  <% if @vidvatar['id'] == "T6LxtUgzVjk" then %>
+    <h4><span class="error_message">You have not requested a Vidvatar or it is not well-formed</span> <%= link_to 'Edit', edit_user_profile_path(@user) %> your profile to correct this.</h4>
+  <% end %>
+<% end %>
+
+<%= render :partial => "content", :object => @user%>

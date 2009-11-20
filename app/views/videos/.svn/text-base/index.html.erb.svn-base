@@ -1,0 +1,41 @@
+	<h2>All <span class='kuiq'>kuiq</span> Videos</h2>
+  <h4><%= "Displaying Video #{@start} - #{@finish} of #{@total}" %></h4>
+  <% if @number_of_pages > 1%>
+    <%= render :partial => "modular_partials/video_pagination" %>
+  <% end %>
+  
+  <ul>
+    <% if @result.class == Array then %>
+  	  <% for video in @result %>
+  	    <% if video['group']['duration'].values.to_s.to_i < 31 then%>
+    	  	<li>
+    		    <h3><%= link_to video['title'], video_path(video['id']) %></h3>
+    		    <h4>by <%= link_to video['kuiq_user'], user_profile_path(video['kuiq_user']) %> | tag: <%= video['group']['category'].first %></h4>
+    		    <%= link_to image_tag(video['group']['thumbnail'].first['url'], :alt => video['title']), video_path(video['id']) %>
+    		    <p>
+    		    	Description: <%= video['content'].chop.chop.chop.chop %><br /><br /><%= video['group']['duration'].invert.to_a.join(" ") %>
+    		    </p>
+    		    <div id="clear_both"></div>
+    		  </li>
+  		  <% end %>
+  	  <% end %>
+	  <% elsif @result != 0 then %>
+  	  <% video = @result %>
+    	  
+      <% if video['group']['duration'].values.to_s.to_i < 31 then%>
+  	    <li>
+  		    <h3><%= link_to video['title'], video_path(video['id']) %></h3>
+  		    <h4>by <%= link_to video['kuiq_user'], user_profile_path(video['kuiq_user']) %> | tag: <%= video['group']['category'].first %></h4>
+  		    
+  		    <%= link_to image_tag(video['group']['thumbnail'].first['url'], :alt => video['title']), video_path(video['id']) %>
+          <div class="desc_holder"><%= video['content'].chop.chop.chop.chop %><br /><br /><%= video['group']['duration'].invert.to_a.join(" ") %>
+          </div> 
+  		    <div id="clear_both"></div>
+  		  </li>
+  		<% end %>
+  	<% else %>
+  	  <li>
+  	    <h3>There are no videos on <span class='kuiq'>kuiq</span>. Please add your own.</h3>
+  	  </li>
+	  <% end %>
+  </ul>

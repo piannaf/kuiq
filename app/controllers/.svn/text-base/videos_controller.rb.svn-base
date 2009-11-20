@@ -1,0 +1,130 @@
+class VideosController < ApplicationController
+  include YouTubeModel::Helpers
+  
+  rescue_from ActiveResource::BadRequest, :with => :show_error
+  
+  def show_error
+    # respond_to do |type| 
+    #   type.html { render :template => "errors/video_404", :layout => 'application', :status => 404 } 
+    #   type.all  { render :nothing => true, :status => 404 } 
+    # end
+    
+    redirect_to videos_url(:page => 1)
+    
+    true  # so we can do "show_error and return"
+  end
+  
+  # GET /videos
+  # GET /videos.xml
+  def index
+    @max_results = 15
+    @youtube = Video.developed_by_me(:max_results => @max_results, :start_index => @max_results*( params[:page].to_i - 1) + 1 )
+    #@youtube = Video.find('entre les murs avec', :max_results => @max_results, :start_index => @max_results*( params[:page].to_i - 1) + 1 )
+
+    #initialize useful variables
+    @start = @youtube['startIndex']
+    @finish = [@youtube['startIndex'].to_i + @youtube['itemsPerPage'].to_i - 1, @youtube['totalResults'].to_i].min
+    @total = @youtube['totalResults'].to_i
+    
+    @number_of_pages = (@total.to_f / @max_results.to_f).ceil
+    @current_page = params[:page].to_i
+    
+    #create resulting hash of videos
+    @total != 0 ? @result = add_kuiq_user(@youtube['entry']) : @result = 0
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @youtube }
+    end
+  end
+
+  # GET /videos/1
+  # GET /videos/1.xml
+  def show
+    @video = add_kuiq_user(Video.find_by_id(params[:id]))
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @youtube }
+    end
+  end
+
+  # GET /videos/new
+  # GET /videos/new.xml
+  def new
+    if params[:token]
+      
+      @categories ||= Video.categories_collection
+      
+      respond_to do |format|
+        format.html # new.html.erb
+        format.xml  { render :xml => @categories }
+      end
+    else
+      redirect_to(youtube_auth_url(new_video_url))
+    end
+  end
+
+  # GET /videos/1/edit
+  def edit
+    @categories ||= Video.categories_collection
+  end
+  
+  # POST /videos
+  # POST /videos.xml
+  def upload #create
+  	params[:video][:nexturl] = user_profile_url(current_user)
+  	params[:video][:kuiq_user] = current_user.login
+  	if params[:video][:title].blank? || params[:video][:description].blank? || params[:video][:keywords].blank?
+  	  flash[:warning] = "Your upload failed because not all information was filled."
+  	  redirect_to(user_profile_url(current_user))
+	  else
+      @upload_info = Video.get_upload_url(params[:video])
+    end
+  end
+
+  # PUT /videos/1
+  # PUT /videos/1.xml
+  def update
+    # @youtube = Video.find(params[:id])
+    # 
+    # respond_to do |format|
+    #   if @youtube.update_attributes(params[:attr_type])
+    #     flash[:notice] = 'Video was successfully updated.'
+    #     format.html { redirect_to(@youtube) }
+    #     format.xml  { head :ok }
+    #   else
+    #     format.html { render :action => "edit" }
+    #     format.xml  { render :xml => @youtube.errors, :status => :unprocessable_entity }
+    #   end
+    # end
+  end
+  
+  # GET /videos/1/delete
+  def delete
+    # @youtube = Video.find( params[:id] )
+    # respond_to do |format|
+    #     format.html # delete.html.erb
+    # end
+  end
+
+  # DELETE /videos/1
+  # DELETE /videos/1.xml
+  def destroy
+    # @youtube = Video.find(params[:id])
+    # redirect_to(@youtube) and return if params[:cancel]
+    # 
+    # respond_to do |format|
+    # 	if @youtube.destroy
+    # 		flash[:notice] = 'Type was successfully destroyed.'
+    #   	format.html { redirect_to(videos_url) }
+    #   	format.xml  { head :ok }
+    # 	else
+    # 		flash[:notice] = 'Type was NOT destroyed.'
+    # 		format.html { render :action => "delete"}
+    # 		format.xml  { render :xml => @youtube.errors, :status => :unprocessable_entity }
+    #   		end
+    # end
+  end
+  
+end

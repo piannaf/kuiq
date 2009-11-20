@@ -1,0 +1,62 @@
+# Filters added to this controller apply to all controllers in the application.
+# Likewise, all the methods added will be available for all controllers.
+
+class ApplicationController < ActionController::Base
+  helper :all # include all helpers, all the time
+
+  # See ActionController::RequestForgeryProtection for details
+  # Uncomment the :secret if you're not using the cookie session store
+  protect_from_forgery # :secret => 'b6b639fa2614e7bb19be59ab0d481a9b'
+  
+  # See ActionController::Base for details 
+  # Uncomment this to filter the contents of submitted sensitive data parameters
+  # from your application log (in this case, all fields with names like "password"). 
+  # filter_parameter_logging :password
+  
+  include AuthenticatedSystem
+
+  def add_kuiq_user(yt_info)
+    if yt_info.is_a?(Array)
+      yt_info.collect {|video|
+        video.merge('kuiq_user' => get_kuiq_user_id(video) )
+      }
+    else
+      yt_info.merge('kuiq_user' => get_kuiq_user_id(yt_info) )
+    end
+  end
+  
+  def get_kuiq_user_id(yt_info)
+    yt_info['group']['category'].select {|v| v=~ /^#{YT_CONFIG['developer_tag']}_/ }.to_s.split(/^#{YT_CONFIG['developer_tag']}_/).to_s unless yt_info['group'].blank?
+  end
+  
+  def get_vidvatar(users)
+    if users.is_a?(Array)
+      users.each {|user|
+        user.vidvatar_img_url = Video.find_by_id(user.profile.vidvatar)['group']['thumbnail'].first['url'] if Video.exists?(user.profile.vidvatar)
+      }
+    else
+      users.vidvatar_img_url = Video.find_by_id(user.profile.vidvatar)['group']['thumbnail'].first['url'] if Video.exists?(user.profile.vidvatar)
+    end
+    
+    users
+  
+  end
+  
+  #handle no route exists
+  def method_missing(*args)
+    rescue_404
+  end
+  
+  def rescue_404
+    respond_to do |type| 
+      type.html { render :template => "errors/route_404", :layout => 'application', :status => 404 } 
+      type.all  { render :nothing => true, :status => 404 } 
+    end
+    
+    true  # so we can do "render_404 and return"
+  end
+  
+  #for seeing what everyone else sees
+  #alias_method :rescue_action_locally, :rescue_action_in_public
+  
+end

@@ -1,0 +1,55 @@
+class UsersController < ApplicationController
+  #only allow trusted people to register for Alpha Testing
+  #before_filter :simple_auth, :except => [ :index, :show ]
+  
+  
+  #render index.rhtml
+  def index
+    @users = User.paginate :page => params[:page], :per_page => 2, :order => 'login DESC'
+    #@users = User.find(:all)
+    get_vidvatar(@users)
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @users }
+    end
+  end
+  
+  def show
+    redirect_to(user_profile_url(params[:id]))
+  end
+  
+  # render new.rhtml
+  def new
+  end
+
+  def create
+    cookies.delete :auth_token
+    # protects against session fixation attacks, wreaks havoc with 
+    # request forgery protection.
+    # uncomment at your own risk
+    # reset_session
+    @user = User.new(params[:user])
+    
+
+    
+    #save the user
+    @user.save
+    if @user.errors.empty?
+      self.current_user = @user
+      redirect_back_or_default('/')
+      flash[:notice] = "Thanks for signing up!"
+    else
+      render :action => 'new'
+    end
+  end
+  
+  # protected
+  # 
+  # def simple_auth
+  #   authenticate_or_request_with_http_basic do |username, password|
+  #     username == "sfif" && password == "over 9000 and 1/2"
+  #   end
+  # end
+
+end

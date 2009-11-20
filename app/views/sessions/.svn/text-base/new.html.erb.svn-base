@@ -1,0 +1,25 @@
+<% if !logged_in? %>
+  <h2>Login as registered user.</h2>
+  <h4>or <%= link_to("Register a new user", new_user_path) %></h4>
+  
+  <ul><li>
+  <span class='error_message'><%= @error_message %></span>
+  
+  <% form_tag session_path do -%>
+  <p><label for="login">Login</label><br/>
+  <%= text_field_tag 'login' %></p>
+  
+  <p><label for="password">Password</label><br/>
+  <%= password_field_tag 'password' %></p>
+  
+  <!-- Uncomment this if you want this functionality
+  <p><label for="remember_me">Remember me:</label>
+  <%= check_box_tag 'remember_me' %></p>
+  -->
+  
+  <p><%= submit_tag 'Log in' %></p>
+  <% end -%>
+  </ul></li>
+<% else %>
+  <h2>You are already logged in.<h2>
+<% end%>

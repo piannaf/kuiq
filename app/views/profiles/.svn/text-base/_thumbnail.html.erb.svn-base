@@ -1,0 +1,16 @@
+<% if video['group']['duration'].values.to_s.to_i < 31 || @user == current_user then%>
+
+<div class="thumbnail">
+
+  <%= link_to video['title'], video_path(video['id']) %><br />
+  <%= link_to image_tag(video['group']['thumbnail'].first['url'], :alt => video['title']), video_path(video['id']) %>
+  
+  <% if @user == current_user then%>
+    <br /><%= button_to "Make this My Vidvatar", { :action => "update", :profile => {:vidvatar_url => video['link'].first['href']} }, :method => :put %>
+    <% if video['group']['duration'].values.to_s.to_i > 30 then%>
+      <br /><h5><span class="error_message">This video is too long, other users will not see it</span></h5>
+    <% end %>
+  <% end %>
+</div>
+
+<% end %>

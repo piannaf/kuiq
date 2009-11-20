@@ -1,0 +1,16 @@
+	<h2>All <span class='kuiq'>kuiq</span> Users</h2>
+  <h4><%= "Displaying 1 - #{[25,@users.size].min} of #{@users.size}" %></h4>
+  <h4><%= will_paginate @users, :inner_window => 2, :outer_window => 0, :renderer => KuiqStylePagination, :id => 'pagination' %></h4>
+<ul>
+  <% for user in @users %>
+    <li>
+      <% if !user.vidvatar_img_url.blank? then %>
+        <%= link_to image_tag(user.vidvatar_img_url), user_profile_path(user, :page => 1) %>
+      <% else %> 
+        <%= link_to image_tag(Video.find_by_id("T6LxtUgzVjk")['group']['thumbnail'].first['url']), user_profile_path(user, :page => 1) %>
+      <% end %>
+      <h3><%= link_to user.login, user_profile_path(user, :page => 1) %></h3>
+      <div id="clear_both"></div>
+    </li>
+  <% end %>
+</ul>

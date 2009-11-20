@@ -1,0 +1,37 @@
+<ul>
+  <li>
+    <h3>Info</h3>
+    <div class="vid_holder">
+        <% if @user.login != @vidvatar_owner %>
+          <h5>This Vidvatar is property of <%= link_to @vidvatar["author"]["name"], "http://youtube.com/#{@vidvatar["author"]["name"]}" %></h5>
+        <% end %>
+        <%= youtube_embed_small @vidvatar %>
+
+    </div>
+    <div id="clear_both"></div>
+  </li>
+  
+  <li>
+    <h3>My Videos</h3>
+    <% if @number_of_pages > 1%>
+      <%= render :partial => "modular_partials/thumbnail_pagination" %>
+    <% end %>
+    
+    <% if @user_vids['entry'].class == Array then %>
+  	  <% for video in @user_vids['entry'] %>
+        <%= render :partial => "thumbnail", :locals => {:video => video} %>
+  	  <% end %>
+	  <% elsif !@user_vids['entry'].blank? then %>
+  	  <% video = @user_vids['entry'] %>
+        <%= render :partial => "thumbnail", :locals => {:video => video} %>
+		<% else %>
+  		<h4>
+  		  <% if @user == current_user then %>
+  		    You have not uploaded any videos with <span class='kuiq'>kuiq</span>. <%= link_to("Upload new video", youtube_auth_url(new_video_url)) %>
+  	    <% else %>
+  	      <%= @user.login %> has not uploaded any videos with <span class='kuiq'>kuiq</span>.
+  	    <% end %>
+	    </h4>
+	  <% end %>
+  </li>
+</ul>

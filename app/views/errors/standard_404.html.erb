@@ -1,0 +1,26 @@
+<%= show_pretty_error(@err_id, params) %>
+
+<ul>
+  <li>
+    <h3>Info</h3>
+    <div class="vid_holder">
+      <h5>This Vidvatar is a placeholder.</h5>
+      <%= default_video.embed_html(212, 186) %>
+    </div>
+    <div id="clear_both"></div>
+    <div class="advert" id="adsense728x15">
+      <a href="https://www.google.com/adsense/static/en_US/linkunit.html"><img  height=15 alt="728x15"  src="https://www.google.com/adsense/static/en_US/images/728x15_4.gif" width=728 border=0 /></a>
+    </div>
+  </li>
+  
+  <li>
+    <h3>Most recent <span class="kuiq">kuiq</span> Videos</h3>
+  	  <% for video in first_20_kuiq_videos %>
+        <%= render :partial => "profiles/thumbnail", :locals => {:video => video} %>
+  	  <% end %>
+    <div class="advert" id="adsense728x15">
+      <a href="https://www.google.com/adsense/static/en_US/linkunit.html"><img  height=15 alt="728x15"  src="https://www.google.com/adsense/static/en_US/images/728x15_4.gif" width=728 border=0 /></a>
+    </div>
+  </li>
+    
+</ul>

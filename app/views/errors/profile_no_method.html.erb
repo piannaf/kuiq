@@ -1,0 +1,22 @@
+<h2><%= params[:user_id] %>'s Profile Does Not Exist</h2>
+<h4><span class="error_message">The profile you requested does not exist.</span> <%= link_to 'Take a look at all <span class=\'kuiq\'>kuiq</span> users', users_path %></h4>
+
+<ul>
+  <li>
+    <h3>Info</h3>
+    <div class="vid_holder">
+      <h5>This Vidvatar is a placeholder.</h5>
+      <%= default_video.embed_html(212, 186) %>
+    </div>
+    <div id="clear_both">
+  </li>
+  
+  <li>
+    <h3>Most Recent <span class="kuiq">kuiq</span> Videos</h3>
+  	  <% for video in first_20_kuiq_videos %>
+        <%= render :partial => "thumbnail", :locals => {:video => video} %>
+  	  <% end %>
+
+  </li>
+    
+</ul>

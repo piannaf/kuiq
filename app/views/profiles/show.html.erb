@@ -1,0 +1,20 @@
+
+<% if @user != current_user then %>
+  <h2><%= @user.login %>'s Profile</h2>
+<% else %>
+  <h2 id="page_title">My Profile</h2>
+<% end %>
+
+
+<% if @user == current_user then %>
+  <h4 id="under_title"><%= link_to 'edit', edit_user_profile_path(@user) %></h4>
+  <% if !flash%>
+    <h4 class='error_message'><%= flash[:warning] %></h4>
+  <% end %>
+  
+  <% if @vidvatar.unique_id == "T6LxtUgzVjk" then %>
+    <h4><span class="error_message">You have not requested a Vidvatar or it is not well-formed</span> <%= link_to 'Edit', edit_user_profile_path(@user) %> your profile to correct this.</h4>
+  <% end %>
+<% end %>
+
+<%= render :partial => "content", :object => @user%>

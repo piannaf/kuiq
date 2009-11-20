@@ -1,0 +1,25 @@
+<% if logged_in? %>
+  <h2>Information for New <span class='kuiq'>kuiq</span> Video</h2>
+  <ul><li>
+    <h3>All Fields are Required</h3>
+    <% form_for 'video', :url => upload_new_video_path do |f| %>
+      <%= f.hidden_field :auth_sub, :value => params[:token] %>
+      <p><%= f.label :title %><br />
+      <%= f.text_field :title %></p>
+  
+      <p><%= f.label :description %><br />
+      <%= f.text_area :description, :rows => 10 %></p>
+  
+      <p><%= f.label :category %><br />
+      <%= f.select :category, @categories %></p>
+  
+      <p><%= f.label :keywords %><br />
+      <%= f.text_field :keywords %></p>
+  
+      <p><%= f.submit 'Continue to Step 2' %></p>
+    <% end %>
+  </ul></li>
+<% else %>
+  <h2>You must login to upload a video.</h2>
+  <h4><%= "#{link_to("Login", new_session_path)} or #{link_to("Register", new_user_path)}" %></h4>
+<% end%>

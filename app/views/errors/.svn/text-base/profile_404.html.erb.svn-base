@@ -1,0 +1,35 @@
+<h2><%= params[:user_id] %>'s Profile</h2>
+<h4><span class="error_message"><%= "The video you requested to be your Vidvatar does not exist. #{link_to 'Please Try Again.', edit_user_profile_path(@user) }" if @user = current_user %></span></h4>
+
+<ul>
+  <li>
+    <h3>Info</h3>
+    <div class="vid_holder">
+      <h5>This Vidvatar is a placeholder.</h5>
+      <%= youtube_embed_small Video.find_by_id("T6LxtUgzVjk") %>
+    </div>
+    <div id="clear_both">
+  </li>
+  
+  <li>
+    <h3>My Videos</h3>
+    <% @youtube = Video.uploaded_to_kuiq_by(params[:user_id])%>
+    <% if @youtube['entry'].class == Array then %>
+  	  <% for video in @youtube['entry'] %>
+        <%= render :partial => "thumbnail", :locals => {:video => video} %>
+  	  <% end %>
+	  <% elsif !@youtube['entry'].blank? then %>
+  	  <% video = @youtube['entry'] %>
+        <%= render :partial => "thumbnail", :locals => {:video => video} %>
+		<% else %>
+  		<h4>
+  		  <% if @user == current_user then %>
+  		    You have not uploaded any videos with <span class='kuiq'>kuiq</span>. <%= link_to("Upload new video", youtube_auth_url(new_video_url)) %>
+  	    <% else %>
+  	      <%= @user.login %> has not uploaded any videos with <span class='kuiq'>kuiq</span>.
+  	    <% end %>
+	    </h4>
+	  <% end %>
+  </li>
+    
+</ul>

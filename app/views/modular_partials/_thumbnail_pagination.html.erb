@@ -1,0 +1,38 @@
+<h4 id="pagination"> 
+    <% if @current_page != 1 then %>
+      <%= link_to 'previous', user_profile_path( params[:user_id], :page => @current_page - 1), :id => 'previous' %>
+      <%= link_to '1', user_profile_path( params[:user_id], :page => 1), :id => '1' %>
+    <% else %>
+      <span class='disabled' id='previous'>previous</span>
+      <span class='current' id='1'>1</span>
+    <% end %>
+    
+    <% if @current_page > 5 then %>
+      <span class='gap' id='2'>...</span>
+    <% end %>
+    
+      <% i = 2 %>
+    <% for p in ( @current_page > 5 ? [@current_page - 2, @number_of_pages - 6].min : 2 )..(
+      @current_page + 4 < @number_of_pages ? [@current_page + 2, 7].max : @number_of_pages - 1 ) %>
+            
+        <% if p != @current_page %>
+          <%= link_to p, user_profile_path( params[:user_id], :page => p), :id => (@current_page < 6 ? i : i + 1).to_s %>
+        <% else %>
+          <span class='current' id='<%= @current_page < 6 ? i : i + 1 %>'><%= p %></span>
+        <% end%>
+            
+      <% i += 1 %>
+    <% end %>
+
+    <% if @current_page + 4 < @number_of_pages then %>
+      <span class='gap' id='8'>...</span>
+    <% end %>
+      
+    <% if params[:page].to_i != @number_of_pages then %>
+      <%= link_to @number_of_pages, user_profile_path( params[:user_id], :page => @number_of_pages ), :id => '9' %>
+      <%= link_to 'next', user_profile_path( params[:user_id], :page => @current_page + 1), :id => 'next'%>
+    <% else %>
+      <span class='current' id='9'><%= @number_of_pages %></span>
+      <span class='disabled' id='next' >next</span>
+    <% end%>
+</h4>

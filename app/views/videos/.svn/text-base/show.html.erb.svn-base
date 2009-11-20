@@ -1,0 +1,16 @@
+
+<h2><%= @video['title'] %></h2>
+<h4>by <%= link_to @video['kuiq_user'], user_profile_path(@video['kuiq_user']) %> | tag: <%= @video['group']['category'].first %></h4>
+<% if @video['group']['duration'].values.to_s.to_i > 30 then%>
+  <h4><span class="error_message">This video is more than 30 seconds long, it will not appear in <span class="kuiq">kuiq's</span> listings</span></h4>
+<% end %>
+<ul><li>
+  <div class="vid_holder"><%= youtube_embed @video %></div>
+  <div class="desc_holder">
+    <ul>
+      <li><h3>Description</h3><h4><%= @video['content'].chop.chop.chop.chop %></h4></li>
+      <li><h3>Duration<h3><h4><%= @video['group']['duration'].invert.to_a.join(" ") %></h4></li>
+    </ul>
+  </div>  
+  <div id="clear_both">
+</li></ul>

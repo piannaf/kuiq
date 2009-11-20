@@ -1,0 +1,14 @@
+<% if logged_in? %>
+  <h2>Choose file for New <span class='kuiq'>kuiq</span> Video</h2>
+  <ul><li>
+    <% form_tag @upload_info[:url], :multipart => true do %>
+      <%= hidden_field_tag :token, @upload_info[:token] %>
+      <p><%= label_tag 'Select a file' %><br />
+      <%= file_field_tag :file %></p>
+      <p><%= submit_tag 'Upload video' %></p>
+    <% end %>
+  </ul></li>
+<% else %>
+  <h2>You must login to upload a video.</h2>
+  <h4><%= "#{link_to("Login", new_session_path)} or #{link_to("Register", new_user_path)}" %></h4>
+<% end %>

@@ -1,0 +1,16 @@
+<% if video.duration < 31 || @user == current_user then%>
+
+<div class="thumbnail">
+
+  <%= link_to video.title, video_path(video.unique_id) %><br />
+  <%= link_to image_tag(video.thumbnails.first.url, :alt => video.title), video_path(video.unique_id) %>
+  
+  <% if logged_in? && @user == current_user then%>
+    <br /><%= button_to "Make this My Vidvatar", { :action => "update", :profile => {:vidvatar_url => video.player_url} }, :method => :put %>
+    <% if video.duration > 30 then%>
+      <br /><h5 class="too_long"><span class="error_message">This video is too long, other users will not see it</span></h5>
+    <% end %>
+  <% end %>
+</div>
+
+<% end %>

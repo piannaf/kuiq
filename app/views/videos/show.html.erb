@@ -1,0 +1,27 @@
+
+<h2 id="page_title"><%= @video.title %></h2>
+<h4 id="under_title">
+  by <%= link_to ytg_get_kuiq_user_id(@video), user_profile_path(ytg_get_kuiq_user_id(@video)) %> | 
+  category: <%= @video.categories.first.label.downcase %>
+</h4>
+
+<% if @video.duration > 30 then%>
+  <h4><span class="error_message">This video is more than 30 seconds long, it will not appear in <span class="kuiq">kuiq's</span> listings</span></h4>
+<% end %>
+
+<ul class="video_entry"><li>
+  <div class="advert" id="adsense728x15">
+    <a href="https://www.google.com/adsense/static/en_US/linkunit.html"><img  height=15 alt="728x15"  src="https://www.google.com/adsense/static/en_US/images/728x15_4.gif" width=728 border=0 /></a>
+  </div>
+  <div class="vid_holder"><%= @video.embed_html %></div>
+  <div class="desc_holder">
+    <ul>
+      <li><h3>Description</h3><h4><%= @video.html_content %></h4></li>
+      <li><h3>Duration</h3><h4><%= @video.duration %> seconds</h4></li>
+    </ul>
+  </div>  
+  <div id="clear_both"></div>
+  <div class="advert" id="adsense728x15">
+    <a href="https://www.google.com/adsense/static/en_US/linkunit.html"><img  height=15 alt="728x15"  src="https://www.google.com/adsense/static/en_US/images/728x15_4.gif" width=728 border=0 /></a>
+  </div>
+</li></ul>

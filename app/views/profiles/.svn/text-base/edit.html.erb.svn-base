@@ -1,0 +1,17 @@
+<% if logged_in? %>
+  <h2>
+  	Edit <%= current_user.login %>'s profile
+  </h2>
+  
+  <ul><li>
+  <% form_for :profile, @profile, :url => user_profile_path(current_user), :html => {:method => :put, :class => "edit_profile", :id => "edit_profile_#{@profile.id}"} do |f| %>
+    <p><label for="user_vidvatar">Enter the URL of your Video Avatar</label><br/>
+    <%= f.text_field :vidvatar_url %></p>
+    
+    <p><%= f.submit 'Update' %></p>
+  <% end %>
+  </li></ul>
+<% else %>
+  <h2>You must login to edit a profile.</h2>
+  <h4><%= "#{link_to("Login", new_session_path)} or #{link_to("Register", new_user_path)}" %></h4>
+<% end%>
